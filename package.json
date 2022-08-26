@@ -1,20 +1,17 @@
 {
-  "name": "electron-quick-start",
+  "name": "oTranscribe+ Desktop",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "oTranscribe+ Desktop application based on Electron.",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/projecte-aina/oTranscribe-plus-desktop",
   "keywords": [
     "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "oTranscribe+"
   ],
-  "author": "GitHub",
+  "author": "Aina",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^20.0.3"
