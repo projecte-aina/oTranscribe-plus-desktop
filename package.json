@@ -6,6 +6,17 @@
   "scripts": {
     "start": "electron ."
   },
+  "build": {
+    "extraResources": [
+      {
+        "from": "./otranscribe/models/",
+        "to": "models",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  },
   "repository": "https://github.com/projecte-aina/oTranscribe-plus-desktop",
   "keywords": [
     "Electron",
