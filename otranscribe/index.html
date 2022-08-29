@@ -31,6 +31,9 @@
     <script type="text/javascript" src="l10n.js"></script>
 
     
+    <script>
+        var modelsPrefix = "https://otranscribe.bsc.es";
+    </script>
 
     <div class="topbar inputting">
     <div class="title active">oTranscribe</div>
@@ -157,7 +160,7 @@
             <div class="close-message-panel"><i class="fa fa-times"></i></div>
             <div class="message-content"></div>
     </div>
-
+    
 
     <script>
         let model = null;
@@ -246,7 +249,8 @@
             partialContainer.textContent = document.webL10n.get('loadingModel');
             
             const channel = new MessageChannel();
-            model = await Vosk.createModel('models/' + modelName);
+            let modelUrl = new URL("/models/" + modelName, modelsPrefix || window.location);
+            model = await Vosk.createModel(modelUrl.href);
             model.registerPort(channel.port1);
 
             const sampleRate = 48000;
@@ -296,7 +300,8 @@
             partialContainer.textContent = document.webL10n.get('loadingModel');
             
             const channel = new MessageChannel();
-            model = await Vosk.createModel('models/' + modelName);
+            let modelUrl = new URL("/models/" + modelName, modelsPrefix || window.location);
+            model = await Vosk.createModel(modelUrl.href);
             model.registerPort(channel.port1);
 
             const sampleRate = 48000;
