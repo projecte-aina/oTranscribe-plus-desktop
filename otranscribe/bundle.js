@@ -59,6 +59,7 @@ function init() {
   window.insertTimestamp = _timestamps__WEBPACK_IMPORTED_MODULE_6__.insertTimestamp;
   window.formatMilliseconds = _timestamps__WEBPACK_IMPORTED_MODULE_6__.formatMilliseconds;
   window.createTimestampEl = _timestamps__WEBPACK_IMPORTED_MODULE_6__.createTimestampEl;
+  window.activateTimestamps = _timestamps__WEBPACK_IMPORTED_MODULE_6__.activateTimestamps;
   (0,_ui__WEBPACK_IMPORTED_MODULE_5__.keyboardShortcutSetup)();
   _view_controller__WEBPACK_IMPORTED_MODULE_10__["default"].set('about'); // Gather query parameters into an object
 
