@@ -49,7 +49,9 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "oTranscribePlus"
+            "name": "oTranscribePlus",
+            "iconUrl": "https://iconarchive.com/download/i81804/kxmylo/simple/application-default.ico",
+            "setupIcon": "./assets/win/generic-icon.ico"
           }
         },
         {
@@ -60,7 +62,9 @@
         },
         {
           "name": "@electron-forge/maker-deb",
-          "config": {}
+          "config": {
+            "icon": "./assets/linux/generic-icon.png"
+          }
         },
         {
           "name": "@electron-forge/maker-rpm",
@@ -68,7 +72,9 @@
         },
         {
           "name": "@electron-forge/maker-dmg",
-          "config": {}
+          "config": {
+            "icon": "./assets/mac/generic-icon.icns"
+          }
         }
       ]
     }

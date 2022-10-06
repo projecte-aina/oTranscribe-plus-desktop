@@ -46,3 +46,10 @@ sudo apt install mono-complete wine
 
 For signing the windows executable follow instructions steps on https://www.electronforge.io/guides/code-signing/code-signing-windows#using-electron-forge .
 
+If you add your certificate to `assets/win` you will just need to add these lines in the configuration of :
+
+```json
+"certificateFile": "./assets/win/cert.pfx",
+"certificatePassword": "this-is-a-secret"
+```
+
