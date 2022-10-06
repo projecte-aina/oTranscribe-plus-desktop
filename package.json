@@ -6,7 +6,10 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "make-linux": "electron-forge make make --arch=x64 --platform=linux",
+    "make-win": "electron-forge make make --arch=x64 --platform=win32",
+    "make-mac": "electron-forge make make --arch=x64 --platform=darwin"
   },
   "build": {
     "extraResources": [
@@ -29,6 +32,7 @@
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.65",
     "@electron-forge/maker-deb": "^6.0.0-beta.65",
+    "@electron-forge/maker-dmg": "^6.0.0-beta.66",
     "@electron-forge/maker-rpm": "^6.0.0-beta.65",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.65",
     "@electron-forge/maker-zip": "^6.0.0-beta.65",
@@ -45,7 +49,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "oTranscribe+ Desktop"
+            "name": "oTranscribePlus"
           }
         },
         {
@@ -60,6 +64,10 @@
         },
         {
           "name": "@electron-forge/maker-rpm",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-dmg",
           "config": {}
         }
       ]
