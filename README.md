@@ -46,10 +46,27 @@ sudo apt install mono-complete wine
 
 For signing the windows executable follow instructions steps on https://www.electronforge.io/guides/code-signing/code-signing-windows#using-electron-forge .
 
-If you add your certificate to `assets/win` you will just need to add these lines in the configuration of :
+If you add your certificate to `assets/win` you will just need to add these lines in the configuration of:
 
 ```json
 "certificateFile": "./assets/win/cert.pfx",
 "certificatePassword": "this-is-a-secret"
 ```
 
+## Future actions to be considered
+
+The application was prepared for being built and run in the most used platforms nowadays: Windows, Linux, and MacOS. The given `npm make` commands in previous sections will do the corresponding builds. However, these commands require some configuration code each, as those platforms allow different parameters on their end build. First of all, we have to take into account that it was decided to place configuration in `package.json` file, not in a `forge.config.js` file. There is a `config.forge.makers` key that contains those configuration values for those defined platforms, each one in a different index\maker of the list value.
+
+[Makers](https://www.electronforge.io/config/makers) list contains objects with two main keys: `name` and `config`. There could also be a `platforms` key to concrete which platforms this maker builds; to add it is not adviced as each maker is already preconfigured for its corresponding platform. Name key will identify which maker configuration values are accepted on the nested config object inside the maker. These are the defined makers for this project:
+
+* [`@electron-forge/maker-squirrel`](https://www.electronforge.io/config/makers/squirrel.windows) for Windows.
+* [`@electron-forge/maker-deb`](https://www.electronforge.io/config/makers/deb) and [`@electron-forge/maker-rpm`](https://www.electronforge.io/config/makers/rpm) for Linux.
+* [`@electron-forge/maker-dmg`](https://www.electronforge.io/config/makers/dmg) for MacOS.
+
+As we saw in previous sections, there already are some preconfigured elements, as some icons or files which values are pointing to `assets` folder. Lets link here some useful and possible future actions that could be required for distributing the oTranscribe+ Desktop application on these platforms:
+
+* [Set icons for Windows and MacOS](https://www.electronforge.io/guides/create-and-add-icons#windows-and-macos)
+* [Set icons for Linux](https://www.electronforge.io/guides/create-and-add-icons#linux)
+* [Set icons for installer files](https://www.electronforge.io/guides/create-and-add-icons#configuring-installer-icons)
+* [Signing code for Windows](https://www.electronforge.io/guides/code-signing/code-signing-windows)
+* [Signing code for MacOS](https://www.electronforge.io/guides/code-signing/code-signing-macos)
