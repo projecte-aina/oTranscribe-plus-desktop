@@ -1,6 +1,6 @@
 {
   "name": "oTranscribe+ Desktop",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "oTranscribe+ Desktop application based on Electron.",
   "main": "main.js",
   "scripts": {
@@ -63,7 +63,7 @@
         {
           "name": "@electron-forge/maker-deb",
           "config": {
-            "icon": "./assets/linux/generic-icon.png"
+            "icon": "./assets/linux/otranscribe-p.png"
           }
         },
         {
