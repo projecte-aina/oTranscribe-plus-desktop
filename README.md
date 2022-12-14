@@ -70,3 +70,17 @@ As we saw in previous sections, there already are some preconfigured elements, a
 * [Set icons for installer files](https://www.electronforge.io/guides/create-and-add-icons#configuring-installer-icons)
 * [Signing code for Windows](https://www.electronforge.io/guides/code-signing/code-signing-windows)
 * [Signing code for MacOS](https://www.electronforge.io/guides/code-signing/code-signing-macos)
+
+## Authors and acknowledgment
+Developed by [Jamgo SCCL](https://jamgo.coop/) for the Text Mining Unit in Barcelona Supercomputing Center.
+
+## License
+MIT License
+
+# Funding
+
+This work is funded by the [Generalitat de
+Catalunya](https://politiquesdigitals.gencat.cat/ca/inici/index.html#googtrans(ca|en))
+within the framework of [Projecte AINA](https://politiquesdigitals.gencat.cat/ca/economia/catalonia-ai/aina).
+
+<a target="_blank" title="Generalitat de Catalunya" href="https://politiquesdigitals.gencat.cat/ca/economia/catalonia-ai/aina/"><img alt="Generalitat logo" src="https://bot.aina.bsc.es/logos/gene.png" width="400"></a>
