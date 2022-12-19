@@ -844,6 +844,45 @@ body {
   top: 36px;
   width: 100%; }
 
+#partial-container {
+  display: flex;
+  justify-content: center;
+  white-space: nowrap; }
+
+#partial {
+  width: 25%;
+  min-width: 350px;
+  color: #4C6777;
+  display: inline-block;
+  overflow-x: hidden;
+  height: 1rem;
+  direction: rtl;
+  text-align: center; }
+
+#tips {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0; }
+  #tips div.content {
+    max-width: 400px;
+    border: 2px solid #BBB;
+    display: inline-block;
+    border-radius: 4px;
+    padding-top: .25rem;
+    padding-right: .25rem; }
+  #tips div.button {
+    padding: .25rem;
+    display: flex;
+    justify-content: flex-end; }
+    #tips div.button button {
+      cursor: pointer; }
+  #tips div.text {
+    padding: 1rem;
+    line-height: 1.5rem;
+    color: #888888; }
+    #tips div.text:hover {
+      color: black; }
+
 .message-panel {
   width: 600px;
   margin: 20px auto -20px;

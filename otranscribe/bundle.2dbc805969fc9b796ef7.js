@@ -20,21 +20,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _texteditor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
 /* harmony import */ var _input__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(75);
-/* harmony import */ var _old_browsers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(76);
-/* harmony import */ var _languages__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(77);
+/* harmony import */ var _old_browsers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(77);
+/* harmony import */ var _languages__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(78);
 /* harmony import */ var _player_player__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(71);
-/* harmony import */ var _ui__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(78);
+/* harmony import */ var _ui__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(79);
 /* harmony import */ var _timestamps__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(70);
 /* harmony import */ var _backup__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(88);
 /* harmony import */ var _export__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(90);
 /* harmony import */ var _import__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(102);
 /* harmony import */ var _view_controller__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(103);
+/* harmony import */ var _silent_audio__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(104);
+/* harmony import */ var _silent_audio__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_silent_audio__WEBPACK_IMPORTED_MODULE_11__);
 /******************************************
              Initialisation
 ******************************************/
 var $ = __webpack_require__(3);
 
 var otrQueryParams = {};
+
 
 
 
@@ -60,6 +63,8 @@ function init() {
   window.formatMilliseconds = _timestamps__WEBPACK_IMPORTED_MODULE_6__.formatMilliseconds;
   window.createTimestampEl = _timestamps__WEBPACK_IMPORTED_MODULE_6__.createTimestampEl;
   window.activateTimestamps = _timestamps__WEBPACK_IMPORTED_MODULE_6__.activateTimestamps;
+  window.createSilentAudio = _silent_audio__WEBPACK_IMPORTED_MODULE_11__.createSilentAudio;
+  window.localStorageManager = _input__WEBPACK_IMPORTED_MODULE_1__.localStorage;
   (0,_ui__WEBPACK_IMPORTED_MODULE_5__.keyboardShortcutSetup)();
   _view_controller__WEBPACK_IMPORTED_MODULE_10__["default"].set('about'); // Gather query parameters into an object
 
@@ -21737,8 +21742,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "getQueryParams": () => (/* binding */ getQueryParams),
 /* harmony export */   "hide": () => (/* binding */ hide),
-/* harmony export */   "inputSetup": () => (/* binding */ inputSetup)
+/* harmony export */   "inputSetup": () => (/* binding */ inputSetup),
+/* harmony export */   "localStorage": () => (/* reexport default from dynamic */ local_storage_manager__WEBPACK_IMPORTED_MODULE_0___default.a)
 /* harmony export */ });
+/* harmony import */ var local_storage_manager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(76);
+/* harmony import */ var local_storage_manager__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(local_storage_manager__WEBPACK_IMPORTED_MODULE_0__);
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -21750,6 +21758,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
 
 var $ = __webpack_require__(3);
 
@@ -21817,8 +21827,8 @@ function setFormatsMessage(formats) {
 }
 
 function loadPreviousFileDetails() {
-  if (localStorageManager.getItem("oT-lastfile")) {
-    var lastFile = JSON.parse(localStorageManager.getItem("oT-lastfile"));
+  if (local_storage_manager__WEBPACK_IMPORTED_MODULE_0___default().getItem("oT-lastfile")) {
+    var lastFile = JSON.parse(local_storage_manager__WEBPACK_IMPORTED_MODULE_0___default().getItem("oT-lastfile"));
     var lastfileText = document.webL10n.get('last-file');
 
     if (lastFile.name === undefined) {
@@ -21845,7 +21855,7 @@ function saveFileDetails(fileDetails) {
     };
   }
 
-  localStorageManager.setItem("oT-lastfile", JSON.stringify(obj));
+  local_storage_manager__WEBPACK_IMPORTED_MODULE_0___default().setItem("oT-lastfile", JSON.stringify(obj));
 }
 
 function show() {
@@ -22135,8 +22145,167 @@ function hide() {
   window.localStorageManager = localStorageManager;
 })();
 
+
+
 /***/ }),
 /* 76 */
+/***/ ((module) => {
+
+/* localStorageManager v0.3.0 */
+(function(name, definition) {
+    if (true) module.exports = definition();
+    else {}
+}('localStorageManager', function() {
+'use strict';
+
+var localStorageManager = {
+    identifier: 'localStorageManager',
+    setItem: function(key,value){
+        var that = this;
+        var now = new Date().getTime();
+        var valueWithMetadata = {
+            value: value,
+            timestamp: now
+        };
+        try {
+            localStorage.setItem(
+                this.identifier+'_'+key,
+                JSON.stringify(valueWithMetadata)
+            );
+            this.full = false;
+        } catch (err) {
+            var error = err.name;
+            // Possible error names:
+            // NS_ERROR_DOM_QUOTA_REACHED
+            // QuotaExceededError
+            this.full = true;
+        }
+        if (this.full) {
+            if (
+                !this._lastRanOnFull && this.onFull &&
+                !((now - this._lastRanOnFull) < 1000)
+            ) {
+                this.onFull();
+                this._lastRanOnFull = now;
+            }
+            this.clearOldest( function(){
+                that.setItem(key, value);
+            } );
+        }
+    },
+    getItem: function(key, prefix){
+        prefix = prefix || this.identifier+'_';
+        var parsed = this.getItemMetadata(key, prefix);
+        if (parsed && parsed.value) {
+            return parsed.value;
+        } else {
+            return null;
+        }
+    },
+    getItemMetadata: function(key, prefix){
+        if (prefix === undefined) {
+            prefix = this.identifier+'_';
+        }
+        var raw = localStorage.getItem(prefix+key);
+        if ((raw === null) || (raw === undefined)) {
+            return null;
+        }
+        try {
+            var parsed = JSON.parse(raw);
+        } catch (e) {
+            throw("Item in localStorage with key '"+prefix+key+"' is not valid JSON");
+        }
+        parsed.key = key;
+        if (parsed && parsed.value) {
+            return parsed;
+        }
+        return null;
+        
+    },
+    removeItem: function(key){
+        localStorage.removeItem(this.identifier+'_'+key);
+    },
+    getAll: function(opts){
+        opts = opts || {};
+        var result_obj = {};
+        var result_arr = [];
+        for (var i = 0; i < localStorage.length; i++) {
+            var item = undefined;
+            var key = localStorage.key(i);
+            if (opts.all === true) {
+                item = this.getItemMetadata(key,'');
+            } else if (key.indexOf(this.identifier) > -1) {
+                item = this.getItemMetadata(key,'');
+            }
+            key = key.replace(this.identifier+'_','');
+            if (item) {
+                result_obj[key] = item.value || item;
+                result_arr.push({
+                    key: key,
+                    value: item.value || item,
+                    timestamp: item.timestamp || null,
+                    index: i
+                });
+            }
+        }
+        result_arr.sort(function(a,b){
+            if (a.timestamp !== b.timestamp) {
+                return a.timestamp - b.timestamp;
+            } else {
+                return a.index - b.index;
+            }
+        })
+        if (opts.format === 'array') {
+            return result_arr;
+        } else {
+            return result_obj;
+        }
+    },
+    getArray: function(opts){
+        opts = opts || {};
+        opts.format = 'array';
+        return this.getAll(opts);
+    },
+    getFirst: function(){
+        var arr = this.getArray();
+        return arr[0];
+    },
+    clearOldest: function(callback){
+        if (this.full !== true) {
+            return;
+        }
+        var array = this.getArray();
+        for (var i = 0; i < 3; i++) {
+            if (array[i]) {
+                localStorageManager.removeItem( array[i].key );
+            }
+        }
+        var testKey = this.identifier+'__test_'+new Date().getTime();
+        try {
+            localStorage.setItem(testKey,'A');
+            // assumes test passes...
+            this.full = false;
+            this.saveAttempts = 0;
+            if (callback) { callback(); }
+        } catch (err) {
+            this.saveAttempts += 1;
+            if (this.saveAttempts < 10) {
+                this.clearOldest(callback);
+            } else if (this.onSaveFailure) {
+                this.onSaveFailure();
+            }
+        }
+        localStorage.removeItem(testKey);
+    },
+    saveAttempts: 0
+}
+
+return localStorageManager;
+
+}));
+
+/***/ }),
+/* 77 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -22167,7 +22336,7 @@ function oldBrowserCheck() {
 }
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -22262,7 +22431,7 @@ function addMarkup() {
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (bide);
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -22276,16 +22445,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _player_player__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(71);
 /* harmony import */ var _timestamps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(70);
-/* harmony import */ var _time_selection_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(81);
-/* harmony import */ var _settings_settings_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(82);
+/* harmony import */ var _time_selection_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(82);
+/* harmony import */ var _settings_settings_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(83);
 /******************************************
              User Interaction
 ******************************************/
 var $ = __webpack_require__(3);
 
-var Mousetrap = __webpack_require__(79);
+var Mousetrap = __webpack_require__(80);
 
-var Progressor = __webpack_require__(80);
+var Progressor = __webpack_require__(81);
 
 
 
@@ -22446,7 +22615,7 @@ function setKeyboardShortcutsinUI() {
 }
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ ((module, exports, __webpack_require__) => {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/*global define:false */
@@ -23511,7 +23680,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*global define:false */
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ ((module) => {
 
 (function(name, definition) {
@@ -23660,7 +23829,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*global define:false */
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -23725,7 +23894,7 @@ var toggle = function toggle() {
 });
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -23734,9 +23903,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getSettings": () => (/* binding */ getSettings),
 /* harmony export */   "showSettings": () => (/* binding */ showSettings)
 /* harmony export */ });
-/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(83);
-/* harmony import */ var _KeyboardShortcuts_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(84);
-/* harmony import */ var _ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(78);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(84);
+/* harmony import */ var _KeyboardShortcuts_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(85);
+/* harmony import */ var _ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(79);
 /* harmony import */ var _defaults_json__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(87);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -23766,7 +23935,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-var localStorageManager = __webpack_require__(86);
+var localStorageManager = __webpack_require__(76);
 
 
 function getSettings() {
@@ -23839,7 +24008,7 @@ function showSettings(el) {
 }
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -23863,7 +24032,7 @@ var n,l,u,i,t,o,r,f={},e=[],c=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -23871,10 +24040,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ KeyboardShortcutPanel)
 /* harmony export */ });
-/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(83);
-/* harmony import */ var keycode__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(85);
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(84);
+/* harmony import */ var keycode__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(86);
 /* harmony import */ var keycode__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(keycode__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(78);
+/* harmony import */ var _ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(79);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24040,7 +24209,7 @@ var listen = function listen(cb) {
 };
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ ((module, exports) => {
 
 // Source: http://jsfiddle.net/vWx8V/
@@ -24221,163 +24390,6 @@ for (var alias in aliases) {
 
 
 /***/ }),
-/* 86 */
-/***/ ((module) => {
-
-/* localStorageManager v0.3.0 */
-(function(name, definition) {
-    if (true) module.exports = definition();
-    else {}
-}('localStorageManager', function() {
-'use strict';
-
-var localStorageManager = {
-    identifier: 'localStorageManager',
-    setItem: function(key,value){
-        var that = this;
-        var now = new Date().getTime();
-        var valueWithMetadata = {
-            value: value,
-            timestamp: now
-        };
-        try {
-            localStorage.setItem(
-                this.identifier+'_'+key,
-                JSON.stringify(valueWithMetadata)
-            );
-            this.full = false;
-        } catch (err) {
-            var error = err.name;
-            // Possible error names:
-            // NS_ERROR_DOM_QUOTA_REACHED
-            // QuotaExceededError
-            this.full = true;
-        }
-        if (this.full) {
-            if (
-                !this._lastRanOnFull && this.onFull &&
-                !((now - this._lastRanOnFull) < 1000)
-            ) {
-                this.onFull();
-                this._lastRanOnFull = now;
-            }
-            this.clearOldest( function(){
-                that.setItem(key, value);
-            } );
-        }
-    },
-    getItem: function(key, prefix){
-        prefix = prefix || this.identifier+'_';
-        var parsed = this.getItemMetadata(key, prefix);
-        if (parsed && parsed.value) {
-            return parsed.value;
-        } else {
-            return null;
-        }
-    },
-    getItemMetadata: function(key, prefix){
-        if (prefix === undefined) {
-            prefix = this.identifier+'_';
-        }
-        var raw = localStorage.getItem(prefix+key);
-        if ((raw === null) || (raw === undefined)) {
-            return null;
-        }
-        try {
-            var parsed = JSON.parse(raw);
-        } catch (e) {
-            throw("Item in localStorage with key '"+prefix+key+"' is not valid JSON");
-        }
-        parsed.key = key;
-        if (parsed && parsed.value) {
-            return parsed;
-        }
-        return null;
-        
-    },
-    removeItem: function(key){
-        localStorage.removeItem(this.identifier+'_'+key);
-    },
-    getAll: function(opts){
-        opts = opts || {};
-        var result_obj = {};
-        var result_arr = [];
-        for (var i = 0; i < localStorage.length; i++) {
-            var item = undefined;
-            var key = localStorage.key(i);
-            if (opts.all === true) {
-                item = this.getItemMetadata(key,'');
-            } else if (key.indexOf(this.identifier) > -1) {
-                item = this.getItemMetadata(key,'');
-            }
-            key = key.replace(this.identifier+'_','');
-            if (item) {
-                result_obj[key] = item.value || item;
-                result_arr.push({
-                    key: key,
-                    value: item.value || item,
-                    timestamp: item.timestamp || null,
-                    index: i
-                });
-            }
-        }
-        result_arr.sort(function(a,b){
-            if (a.timestamp !== b.timestamp) {
-                return a.timestamp - b.timestamp;
-            } else {
-                return a.index - b.index;
-            }
-        })
-        if (opts.format === 'array') {
-            return result_arr;
-        } else {
-            return result_obj;
-        }
-    },
-    getArray: function(opts){
-        opts = opts || {};
-        opts.format = 'array';
-        return this.getAll(opts);
-    },
-    getFirst: function(){
-        var arr = this.getArray();
-        return arr[0];
-    },
-    clearOldest: function(callback){
-        if (this.full !== true) {
-            return;
-        }
-        var array = this.getArray();
-        for (var i = 0; i < 3; i++) {
-            if (array[i]) {
-                localStorageManager.removeItem( array[i].key );
-            }
-        }
-        var testKey = this.identifier+'__test_'+new Date().getTime();
-        try {
-            localStorage.setItem(testKey,'A');
-            // assumes test passes...
-            this.full = false;
-            this.saveAttempts = 0;
-            if (callback) { callback(); }
-        } catch (err) {
-            this.saveAttempts += 1;
-            if (this.saveAttempts < 10) {
-                this.clearOldest(callback);
-            } else if (this.onSaveFailure) {
-                this.onSaveFailure();
-            }
-        }
-        localStorage.removeItem(testKey);
-    },
-    saveAttempts: 0
-}
-
-return localStorageManager;
-
-}));
-
-/***/ }),
 /* 87 */
 /***/ ((module) => {
 
@@ -24395,10 +24407,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _message_panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(89);
 /* harmony import */ var _texteditor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
-/* harmony import */ var _ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(78);
+/* harmony import */ var _ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(79);
 var $ = __webpack_require__(3);
 
-var localStorageManager = __webpack_require__(86);
+var localStorageManager = __webpack_require__(76);
 
 
 
@@ -26733,7 +26745,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _settings_settings_jsx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(82);
+/* harmony import */ var _settings_settings_jsx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(83);
 
 
 var $ = function $(sel) {
@@ -26787,6 +26799,89 @@ var validate = function validate(name) {
     return name === currentView;
   }
 });
+
+/***/ }),
+/* 104 */
+/***/ ((module) => {
+
+// https://github.com/edoudou/create-silent-audio/blob/master/index.js
+function createSilentAudio(time) {
+  var freq = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 44100;
+  var length = time * freq;
+  var AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
+
+  if (!AudioContext) {
+    console.log("No Audio Context");
+  }
+
+  var context = new AudioContext();
+  var audioFile = context.createBuffer(1, length, freq);
+  return URL.createObjectURL(bufferToWave(audioFile, length));
+}
+
+function bufferToWave(abuffer, len) {
+  var numOfChan = abuffer.numberOfChannels,
+      length = len * numOfChan * 2 + 44,
+      buffer = new ArrayBuffer(length),
+      view = new DataView(buffer),
+      channels = [],
+      i,
+      sample,
+      offset = 0,
+      pos = 0; // write WAVE header
+
+  setUint32(0x46464952);
+  setUint32(length - 8);
+  setUint32(0x45564157);
+  setUint32(0x20746d66);
+  setUint32(16);
+  setUint16(1);
+  setUint16(numOfChan);
+  setUint32(abuffer.sampleRate);
+  setUint32(abuffer.sampleRate * 2 * numOfChan);
+  setUint16(numOfChan * 2);
+  setUint16(16);
+  setUint32(0x61746164);
+  setUint32(length - pos - 4); // write interleaved data
+
+  for (i = 0; i < abuffer.numberOfChannels; i++) {
+    channels.push(abuffer.getChannelData(i));
+  }
+
+  while (pos < length) {
+    for (i = 0; i < numOfChan; i++) {
+      // interleave channels
+      sample = Math.max(-1, Math.min(1, channels[i][offset])); // clamp
+
+      sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767) | 0; // scale to 16-bit signed int
+
+      view.setInt16(pos, sample, true); // write 16-bit sample
+
+      pos += 2;
+    }
+
+    offset++; // next source sample
+  } // create Blob
+
+
+  return new Blob([buffer], {
+    type: "audio/wav"
+  });
+
+  function setUint16(data) {
+    view.setUint16(pos, data, true);
+    pos += 2;
+  }
+
+  function setUint32(data) {
+    view.setUint32(pos, data, true);
+    pos += 4;
+  }
+}
+
+module.exports = {
+  createSilentAudio: createSilentAudio
+};
 
 /***/ })
 /******/ 	]);
